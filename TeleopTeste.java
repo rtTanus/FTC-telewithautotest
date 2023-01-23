@@ -13,7 +13,7 @@ public class TeleopTeste extends OpMode{
 
     @Override
     public void init(){
-        motorEsquerdoF  = hardwareMap.get(DcMotor.class, "leftDriveUp");
+        motorEsquerdoF  = hardwareMap.get(DcMotor.class, "LeftDriveUp");
         motorDireitoF  = hardwareMap.get(DcMotor.class, "RightDriveUp");
         motorEsquerdoT = hardwareMap.get(DcMotor.class, "LeftDriveDown");
         motorDireitoT = hardwareMap.get(DcMotor.class, "RightDriveDown");
@@ -31,7 +31,7 @@ public class TeleopTeste extends OpMode{
         Arm = hardwareMap.get(DcMotor.class, "Arm");
         Arm.setDirection(DcMotor.Direction.FORWARD);
 
-        servoMotor = hardwareMap.get(Servo.class, "Arm");
+        servoMotor = hardwareMap.get(Servo.class, "Serv");
 
         resetRuntime();
     }
