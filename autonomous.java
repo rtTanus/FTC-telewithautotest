@@ -15,7 +15,7 @@ public class autonomous extends LinearOpMode{
 
         @Override
         public void runOpMode(){
-        motorEsquerdoF  = hardwareMap.get(DcMotor.class, "leftDriveUp");
+        motorEsquerdoF  = hardwareMap.get(DcMotor.class, "LeftDriveUp");
         motorDireitoF  = hardwareMap.get(DcMotor.class, "RightDriveUp");
         motorEsquerdoT = hardwareMap.get(DcMotor.class, "LeftDriveDown");
         motorDireitoT = hardwareMap.get(DcMotor.class, "RightDriveDown");
