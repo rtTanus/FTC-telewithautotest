@@ -31,7 +31,7 @@ public class TeleopTeste extends OpMode{
         Arm = hardwareMap.get(DcMotor.class, "Arm");
         Arm.setDirection(DcMotor.Direction.FORWARD);
 
-        servoMotor = hardwareMap.get(Servo.class, "Serv");
+        servoMotor = hardwareMap.get(Servo.class, "Servo1");
 
         resetRuntime();
     }
