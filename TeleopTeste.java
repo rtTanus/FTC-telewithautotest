@@ -125,7 +125,7 @@ public class TeleopTeste extends OpMode{
         boolean powMin = gamepad2.y;
         double pow = 0;
 
-        while (poderCima) {
+        if (poderCima) {
             pow = pow + 0.1;
             Arm.setPower(pow);
             if (pow >= 1) {
@@ -133,7 +133,7 @@ public class TeleopTeste extends OpMode{
                 Arm.setPower(pow);
             }
         }
-        while (poderBaixo) {
+        if (poderBaixo) {
             pow = pow - 0.1;
             Arm.setPower(pow);
             if (pow <= -1) {
