@@ -40,6 +40,7 @@ public class TeleopTeste extends OpMode{
         servo();
         mover();
         telemetry.update();
+        telemetry.addData("O tempo em que o robô opera é de :", getRuntime());
     }
     public void mover(){
         double axial   = -gamepad1.left_stick_y;
@@ -116,9 +117,6 @@ public class TeleopTeste extends OpMode{
                 
             }
         }
-
-        telemetry.addData("O tempo em que o robô opera é de :", getRuntime());
-        telemetry.update();
     }
     public void linear() {
         boolean poderCima = gamepad2.right_bumper;
