@@ -13,7 +13,7 @@ public class TeleopTeste extends OpMode{
 
     @Override
     public void init(){
-        motorEsquerdoF  = hardwareMap.get(DcMotor.class, "leftDriveUp");
+        motorEsquerdoF  = hardwareMap.get(DcMotor.class, "LeftDriveUp");
         motorDireitoF  = hardwareMap.get(DcMotor.class, "RightDriveUp");
         motorEsquerdoT = hardwareMap.get(DcMotor.class, "LeftDriveDown");
         motorDireitoT = hardwareMap.get(DcMotor.class, "RightDriveDown");
