@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@TeleOp(name="TeleOpInicial", group="OpMode")
+@TeleOp(name="TeleOpBetter", group="OpMode")
 public class TeleOpBetter extends OpMode{
     public Servo servoMotor;
     public DcMotor motorEsquerdoF, motorEsquerdoT, motorDireitoF, motorDireitoT = null;
@@ -67,20 +67,20 @@ public class TeleOpBetter extends OpMode{
             telemetry.addData("A potencia do motorDireitoF é de:", motorDiretoFf);
             telemetry.addData("A potencia do motorEsquerdoT é de:", motorEsquerdoTf);
             telemetry.addData("A potencia do motorDireitoT é de:", motorDireitoTf);
+        if (boostpower){
 
-            if (boostpower){
+             double motorEsquerdoFfr  = axial + lateral + yaw / denominador;
+             double motorDiretoFfr = axial - lateral - yaw / denominador;
+             double motorEsquerdoTfr   = axial - lateral + yaw / denominador;
+             double motorDireitoTfr  = axial + lateral - yaw / denominador;
 
-                double motorEsquerdoFfr  = axial + lateral + yaw / denominador;
-                double motorDiretoFfr = axial - lateral - yaw / denominador;
-                double motorEsquerdoTfr   = axial - lateral + yaw / denominador;
-                double motorDireitoTfr  = axial + lateral - yaw / denominador;
+             allMotorsPower(motorEsquerdoFfr,motorDiretoFfr,motorEsquerdoTfr,motorDireitoTfr);
 
-                allMotorsPower(motorEsquerdoFfr,motorDiretoFfr,motorEsquerdoTfr,motorDireitoTfr);
-
-                telemetry.addData("A potencia do motorEsquerdoF é de:", motorEsquerdoFfr);
-                telemetry.addData("A potencia do motorDireitoF é de:", motorDiretoFfr);
-                telemetry.addData("A potencia do motorEsquerdoT é de:", motorEsquerdoTfr);
-                telemetry.addData("A potencia do motorDireitoT é de:", motorDireitoTfr);
+             telemetry.addData("A potencia do motorEsquerdoF é de:", motorEsquerdoFfr);
+             telemetry.addData("A potencia do motorDireitoF é de:", motorDiretoFfr);
+             telemetry.addData("A potencia do motorEsquerdoT é de:", motorEsquerdoTfr);
+             telemetry.addData("A potencia do motorDireitoT é de:", motorDireitoTfr);
+             
             }
         }
 
@@ -91,7 +91,7 @@ public class TeleOpBetter extends OpMode{
         boolean powMin = gamepad2.y;
         double pow = 0;
 
-        while (poderCima) {
+        if (poderCima) {
             pow = pow + 0.1;
             Arm.setPower(pow);
             if (pow >= 1) {
@@ -99,7 +99,7 @@ public class TeleOpBetter extends OpMode{
                 Arm.setPower(pow);
             }
         }
-        while (poderBaixo) {
+        else if (poderBaixo) {
             pow = pow - 0.1;
             Arm.setPower(pow);
             if (pow <= -1) {
@@ -107,19 +107,19 @@ public class TeleOpBetter extends OpMode{
                 Arm.setPower(pow);
             }
         }
-        if (poderCima && powMax == true) {
+        else if (poderCima && powMax) {
             pow = 1;
             Arm.setPower(pow);
         }
-        else if(poderBaixo && powMax == true) {
+        else if(poderBaixo && powMax) {
             pow = -1;
             Arm.setPower(pow);
         }
-        else if (poderCima && powMin == true){
+        else if (poderCima && powMin){
             pow = 0.1;
             Arm.setPower(pow);
         }
-        else if (poderBaixo && powMin == true){
+        else if (poderBaixo && powMin){
             pow = -0.1;
             Arm.setPower(pow);
         }
@@ -128,7 +128,7 @@ public class TeleOpBetter extends OpMode{
     }
     public void servo() {
         boolean poderAberto = gamepad2.a;
-        boolean poderFechado = gamepad2.b;;
+        boolean poderFechado = gamepad2.b;
         double aberto = 0;
         double fechado = 1;
 
