@@ -12,7 +12,7 @@ public class TeleOpBetter extends OpMode{
     public Servo servoMotor;
     public DcMotor motorEsquerdoF, motorEsquerdoT, motorDireitoF, motorDireitoT = null;
     public DcMotor Arm;
-    double powServo;
+    double powServo = null;
 
     @Override
     public void init(){
