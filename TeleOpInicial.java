@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp(name="TesteTO", group="OpMode")
-public class TesteTO extends OpMode{
+public class TeleopTeste extends OpMode{
     public Servo servoMotor = null;
     public DcMotor motorEsquerdoF, motorEsquerdoT, motorDireitoF, motorDireitoT = null;
     public DcMotor Arm = null;
@@ -74,7 +74,7 @@ public class TesteTO extends OpMode{
         telemetry.addData("A potencia do motorEsquerdoT é de:", motorEsquerdoTf);
         telemetry.addData("A potencia do motorDireitoT é de:", motorDireitoTf);
 
-        }
+    }
 
 
     public void allMotorsPower(double paMEF, double paMDF, double paMET, double paMDT){
@@ -91,10 +91,10 @@ public class TesteTO extends OpMode{
         Arm.setPower(pow);
 
         if(gamepad1.right_bumper){
-            Arm.setPower(0.3);
+            Arm.setPower(0.5);
         }
         if(gamepad1.left_bumper){
-            Arm.setPower(0.3);
+            Arm.setPower(-0.1);
         }
 
         telemetry.addData("A potencia do motor do sistema linear é de", pow);
@@ -111,12 +111,16 @@ public class TesteTO extends OpMode{
         if (poderAberto) {
             powServo = aberto;
             servoMotor.setPosition(powServo);
+            telemetry.addData("A potencia do motor do servo é de:", powServo);
         }
         else if (poderFechado) {
             powServo = fechado;
             servoMotor.setPosition(powServo);
+            telemetry.addData("A potencia do motor do servo é de:", powServo);
         }
-        telemetry.addData("A potencia do motor do servo é de:", powServo);
+        else{
+            telemetry.addData("A potencia do motor do servo é de:", powServo);
+        }
     }
 }
 
