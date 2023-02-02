@@ -91,7 +91,7 @@ public class TeleopTeste extends OpMode{
         Arm.setPower(pow);
 
         if(gamepad1.right_bumper){
-            Arm.setPower(0.5);
+            Arm.setPower(0.8);
         }
         if(gamepad1.left_bumper){
             Arm.setPower(-0.1);
