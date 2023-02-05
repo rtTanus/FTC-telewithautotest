@@ -1,187 +1,211 @@
 package org.firstinspires.ftc.teamcode;
 
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name="TeleOpInicial", group="OpMode")
+
+@TeleOp(name="TesteTO", group="OpMode")
 public class TeleopTeste extends OpMode{
-    public Servo servoMotor;
+    // criação das variáveis para os motores de movimentação
+    // do sistema linear e também do servo motor
+    public Servo servoMotor = null;
     public DcMotor motorEsquerdoF, motorEsquerdoT, motorDireitoF, motorDireitoT = null;
-    public DcMotor Arm;
+    public DcMotor Arm = null;
 
     @Override
     public void init(){
+
+
+        // Nesta parte do codigo nos classicamos as variaveis
+        // dos motores de movimento
         motorEsquerdoF  = hardwareMap.get(DcMotor.class, "LeftDriveUp");
         motorDireitoF  = hardwareMap.get(DcMotor.class, "RightDriveUp");
         motorEsquerdoT = hardwareMap.get(DcMotor.class, "LeftDriveDown");
         motorDireitoT = hardwareMap.get(DcMotor.class, "RightDriveDown");
 
-        motorEsquerdoF.setDirection(DcMotor.Direction.FORWARD);
+        // E nesta parte classificamos o motor do sistema linear
+        Arm = hardwareMap.get(DcMotor.class, "Arm");
+
+        // E aqui o motor servo
+        servoMotor = hardwareMap.get(Servo.class, "Servo");
+
+
+        // Em seguida nos indentificamos as direções
+        // dos motores de movimento
+
+        motorEsquerdoF.setDirection(DcMotor.Direction.REVERSE);
         motorDireitoF.setDirection(DcMotor.Direction.FORWARD);
         motorEsquerdoT.setDirection(DcMotor.Direction.REVERSE);
-        motorDireitoT.setDirection(DcMotor.Direction.REVERSE);
+        motorDireitoT.setDirection(DcMotor.Direction.FORWARD);
 
-        motorEsquerdoF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorDireitoF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorEsquerdoT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorDireitoF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // E também classificamos o motor do sistema linear
 
-        Arm = hardwareMap.get(DcMotor.class, "Arm");
         Arm.setDirection(DcMotor.Direction.FORWARD);
 
-        servoMotor = hardwareMap.get(Servo.class, "Servo1");
 
-        resetRuntime();
+
     }
+
+    // aqui criamos a função loop
     public void loop(){
-        linear();
+        // Uso das funções criadas no loop
         servo();
         mover();
-        telemetry.update();
-        telemetry.addData("O tempo em que o robô opera é de :", getRuntime());
+        linear();
     }
+
+    //Criação da função da movimentação
+
     public void mover(){
-        double axial   = -gamepad1.left_stick_y;
-        double lateral =  gamepad1.left_stick_x;
+
+        // Criação das váriaveis de força para a movimentação
+        double axial   = gamepad1.right_trigger - gamepad1.left_trigger;
+        double lateral = gamepad1.left_stick_x;
         double yaw     =  gamepad1.right_stick_x;
-        double backDirection = gamepad1.right_trigger;
-        double veltonotturb = 0.3;
+
+        // Criação de váriaveis para a movimentação em 8 direções
         double absaxial = Math.abs(axial);
         double abslateral = Math.abs(lateral);
         double absyaw= Math.abs(yaw);
         double denominador = Math.max(absaxial + abslateral + absyaw, 1);
-        boolean boostpower = gamepad1.right_bumper;
+
+        // Calculos para a movimentação das rodas omnidirectionais mecanum
+        double motorEsquerdoFf = (axial + lateral + yaw / denominador);
+        double motorDireitoFf = (axial - lateral - yaw / denominador);
+        double motorEsquerdoTf = (axial - lateral + yaw / denominador);
+        double motorDireitoTf = (axial + lateral - yaw / denominador);
+
+        // Função que define que as Forças utilizadas em cada motor
+
+        allMotorsPower(motorEsquerdoFf, motorDireitoFf, motorEsquerdoTf, motorDireitoTf);
 
 
-        double motorEsquerdoFf  = (axial + lateral + yaw / denominador) - veltonotturb;
-        double motorDiretoFf = (axial - lateral - yaw / denominador) - veltonotturb;
-        double motorEsquerdoTf   = (axial - lateral + yaw / denominador) - veltonotturb;
-        double motorDireitoTf  = (axial + lateral - yaw / denominador) - veltonotturb;
+        // Nessa sequencia de if nos selecionamos as setas dos controles como meios
+        // de movimentação mais precisa, sendo mais lentas e tendo um controle em ambas as 8 direções
 
-        double motorEsquerdoFt  = (axial - lateral - yaw / denominador) - veltonotturb;
-        double motorDiretoFt = (axial + lateral + yaw / denominador) - veltonotturb;
-        double motorEsquerdoTt   = (axial + lateral - yaw / denominador) - veltonotturb;
-        double motorDireitoTt  = (axial - lateral + yaw / denominador) - veltonotturb;
-
-        if (backDirection <= 0.1){
-            if (!boostpower)
-
-                allMotorsPower(motorEsquerdoFf,motorDiretoFf,motorEsquerdoTf,motorDireitoTf);
-
-            telemetry.addData("A potencia do motorEsquerdoF é de:", motorEsquerdoFf);
-            telemetry.addData("A potencia do motorDireitoF é de:", motorDiretoFf);
-            telemetry.addData("A potencia do motorEsquerdoT é de:", motorEsquerdoTf);
-            telemetry.addData("A potencia do motorDireitoT é de:", motorDireitoTf);
-
-            if (boostpower){
-
-                double motorEsquerdoFfr  = axial + lateral + yaw / denominador;
-                double motorDiretoFfr = axial - lateral - yaw / denominador;
-                double motorEsquerdoTfr   = axial - lateral + yaw / denominador;
-                double motorDireitoTfr  = axial + lateral - yaw / denominador;
-
-                allMotorsPower(motorEsquerdoFfr,motorDiretoFfr,motorEsquerdoTfr,motorDireitoTfr);
-
-                telemetry.addData("A potencia do motorEsquerdoF é de:", motorEsquerdoFfr);
-                telemetry.addData("A potencia do motorDireitoF é de:", motorDiretoFfr);
-                telemetry.addData("A potencia do motorEsquerdoT é de:", motorEsquerdoTfr);
-                telemetry.addData("A potencia do motorDireitoT é de:", motorDireitoTfr);
-            }
+        // Seta de baixo
+        if(gamepad1.dpad_down){
+            allMotorsPower(-0.35,-0.35,-0.35,-35);
         }
-        else if(backDirection > 0.1){
 
-            if (!boostpower)
-
-                allMotorsPower(motorEsquerdoFt,motorDiretoFt,motorEsquerdoTt,motorDireitoTt);
-
-                telemetry.addData("A potencia do motorEsquerdoF é de:", motorEsquerdoFt);
-                telemetry.addData("A potencia do motorDireitoF é de:", motorDiretoFt);
-                telemetry.addData("A potencia do motorEsquerdoT é de:", motorEsquerdoTt);
-                telemetry.addData("A potencia do motorDireitoT é de:", motorDireitoTt);
-                
-            if (boostpower){
-
-                double motorEsquerdoFtr  = axial + lateral + yaw / denominador;
-                double motorDiretoFtr = axial - lateral - yaw / denominador;
-                double motorEsquerdoTtr   = axial - lateral + yaw / denominador;
-                double motorDireitoTtr  = axial + lateral - yaw / denominador;
-
-                allMotorsPower(motorEsquerdoFtr,motorDiretoFtr,motorEsquerdoTtr,motorDireitoTtr);
-
-                telemetry.addData("A potencia do motorEsquerdoF é de:", motorEsquerdoFtr);
-                telemetry.addData("A potencia do motorDireitoF é de:", motorDiretoFtr);
-                telemetry.addData("A potencia do motorEsquerdoT é de:", motorEsquerdoTtr);
-                telemetry.addData("A potencia do motorDireitoT é de:", motorDireitoTtr);
-                
-            }
+        // Seta de cima
+        if(gamepad1.dpad_up){
+            allMotorsPower(0.35,0.35,0.35,0.35);
         }
+
+        // Seta da direita
+        if(gamepad1.dpad_right){
+            allMotorsPower(0.35,-0.35,-0.35,0.35);
+        }
+
+        // Seta da esquerda
+        if(gamepad1.dpad_left){
+            allMotorsPower(-0.35,0.35,0.35,-0.35);
+        }
+
+
+        // Nestas linhas de códigos nós usamos o comando Telemetry para
+        // Conseguirmos ver as forças dos motores de movimentação no Drive Hub
+
+        telemetry.addData("A potencia do motorEsquerdoF é de:", motorEsquerdoFf);
+        telemetry.addData("A potencia do motorDireitoF é de:", motorDireitoFf);
+        telemetry.addData("A potencia do motorEsquerdoT é de:", motorEsquerdoTf);
+        telemetry.addData("A potencia do motorDireitoT é de:", motorDireitoTf);
+
     }
-    public void linear() {
-        boolean poderCima = gamepad2.right_bumper;
-        boolean poderBaixo = gamepad2.left_bumper;
-        boolean powMax = gamepad2.x;
-        boolean powMin = gamepad2.y;
-        double pow = 0;
 
-        if (poderCima) {
-            pow = pow + 0.1;
-            Arm.setPower(pow);
-            if (pow >= 1) {
-                pow = 1;
-                Arm.setPower(pow);
-            }
-        }
-        if (poderBaixo) {
-            pow = pow - 0.1;
-            Arm.setPower(pow);
-            if (pow <= -1) {
-                pow = -1;
-                Arm.setPower(pow);
-            }
-        }
-        if (poderCima && powMax == true) {
-            pow = 1;
-            Arm.setPower(pow);
-        }
-        else if(poderBaixo && powMax == true) {
-            pow = -1;
-            Arm.setPower(pow);
-        }
-        else if (poderCima && powMin == true){
-            pow = 0.1;
-            Arm.setPower(pow);
-        }
-        else if (poderBaixo && powMin == true){
-            pow = -0.1;
-            Arm.setPower(pow);
-        }
-        telemetry.addData("A potencia do motor do sistema linear é de", pow);
-        
-    }
-    public void servo() {
-        boolean poderAberto = gamepad2.a;
-        boolean poderFechado = gamepad2.b;
-        double powServo;
-        double aberto = 0;
-        double fechado = 1;
+    // Criação da Função que define o poder de todos
+    // os motores utilizados na movimentação
 
-        if (poderAberto) {
-            powServo = aberto;
-            servoMotor.setPosition(powServo);
-            telemetry.addData("A potencia do motor do servo é de:", powServo);
-        }
-        else if (poderFechado) {
-            powServo = fechado;
-            servoMotor.setPosition(powServo);
-            telemetry.addData("A potencia do motor do servo é de:", powServo);
-        }
-    }
     public void allMotorsPower(double paMEF, double paMDF, double paMET, double paMDT){
         motorEsquerdoF.setPower(paMEF);
         motorDireitoF.setPower(paMDF);
         motorEsquerdoT.setPower(paMET);
         motorDireitoT.setPower(paMDT);
+    }
+    //Criação da função do sistema linear
+
+    public void linear() {
+        // Criação das variáveis utilizadas para definir as forças
+        // utilizadas no uso do sistema linear
+        boolean poderCima = gamepad2.right_bumper;
+        boolean poderBaixo = gamepad2.left_bumper;
+        boolean poderImovel = gamepad2.x;
+        double pow;
+
+        // Nessa sequencia de if, nos colocamos os poderes para elevar
+        // o sistema linear, para abaixar o sistema linear e também
+        // para o ele estar imovel no ar
+
+        // Para subir o sistema linear
+
+        if(poderCima){
+            pow = -0.6;
+            Arm.setPower(pow);
+        }
+
+        // Para descer o sistema linear
+
+        if(poderBaixo){
+            pow = 0.3;
+            Arm.setPower(pow);
+        }
+
+        // Para deixar o sistema linear imovel no ar
+
+        if(poderImovel){
+            pow = -0.2;
+            Arm.setPower(pow);
+        }
+
+        // Para deixar o sistema linear sem poder caso nenhum dos botões seja apertado
+
+        else{
+            pow = 0;
+            Arm.setPower(pow);
+        }
+
+        // Função que permite que o poder do motor do sistema linear
+        // seja exibido no Drive Hub
+        telemetry.addData("A potencia do motor do sistema linear é de", pow);
+
+    }
+
+    // Criação da váriavel de poder do servo fora da função servo
+    // para assim não ser necessário pressionar o botão para definir a força
+    // e sim só apenas apertar
+
+    double powServo = 0;
+
+    //Criação da função do servo
+    public void servo() {
+
+        // Criação das varíaveis tanto de força quanto dos botões
+        // utilizados para abrir e fechar o servo
+
+        boolean poderAberto = gamepad2.a;
+        boolean poderFechado = gamepad2.b;
+        double aberto = 0;
+        double fechado = 1;
+
+        // Função que define o servo estar aberto
+
+        if (poderAberto) {
+            powServo = aberto;
+            servoMotor.setPosition(powServo);
+        }
+
+        // Função que define o servo estar fechado
+
+        else if (poderFechado) {
+            powServo = fechado;
+            servoMotor.setPosition(powServo);
+        }
+
+        // Função que mostra o poder do servo no Drive Hub
+        telemetry.addData("A potencia do motor do servo é de:", powServo);
     }
 }
