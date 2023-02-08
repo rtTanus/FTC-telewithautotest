@@ -30,7 +30,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
-
+// Nesta parte do código nos importamos todas 
+// as bibliotecas da first
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
