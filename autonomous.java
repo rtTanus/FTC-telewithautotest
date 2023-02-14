@@ -28,8 +28,8 @@ public class autonomous extends LinearOpMode{
 
         if (opModeIsActive()) {
 
-                allMotorsPower(0.2,0.2,0.2,0.2);
-                sleep(5000);
+                allMotorsPower(0.4,0.4,0.4,0.4);
+                sleep(1000);
 
 
                 while (opModeIsActive() && motorDireitoF.isBusy() && motorDireitoT.isBusy() && motorEsquerdoF.isBusy() && motorEsquerdoT.isBusy()) {
